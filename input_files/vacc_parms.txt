@@ -16,22 +16,14 @@ mass_pev_boost2_interval 24
 pev_epi_start	0		
 pev_epi_coverage	.9
 pev_epi_scale_up	0
-pev_epi_boost_coverage 0.0
+pev_epi_boost_coverage 0.8
 
+epi_age_1	6
+epi_age_2	7.5
+epi_age_3	9
+epi_age_4	27
 
-tbv_coverage	.9
-tbv_frequency	3
-tbv_max_rounds	10000
-tbv_target	0
-tbv_efficacy	.5
-tbv_half_life	3
-tbv_start	0
-epi_age_1	1.5
-epi_age_2	2.5
-epi_age_3	3.5
-epi_age_4	18
-
-ab_model	0
+ab_model	1
 pev_efficacy	.5
 pev_half_life	1
 pev_decay_shape 1
@@ -49,3 +41,11 @@ pev_d2_mu 6.202944
 pev_d2_sigma	0.5718858
 pev_rho_mu 1.847
 pev_rho_sigma 0.789
+
+tbv_coverage	.9
+tbv_frequency	3
+tbv_max_rounds	10000
+tbv_target	0
+tbv_efficacy	.5
+tbv_half_life	3
+tbv_start	0
