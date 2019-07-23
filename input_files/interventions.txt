@@ -1,0 +1,11 @@
+itn	0
+irs	0
+mda	0
+mass_pev	0
+tbv	0
+epi_pev	0
+epi_ipt	0
+smc	0
+change_drug	0
+itn_birth 0
+

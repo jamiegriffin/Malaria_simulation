@@ -1,0 +1,26 @@
+itn_coverage	.8
+itn_frequency	3
+itn_max_rounds	10000
+itn_target	0
+itn_half_life	2.64
+itn_leave	1
+itn_leave_baseline	1
+itn_leave_dur	5
+itn_start	0
+itn_birth_coverage	.8
+itn_birth_cov_adult	.6
+
+itn_rn_fun	.119
+itn_rnw_fun	.314
+itn_dnw_fun	.513
+itn_dnf_fun	.0
+itn_rn_arab	.119
+itn_rnw_arab	.314
+itn_dnw_arab	.513
+itn_dnf_arab	.0
+itn_rn_gamb_ss	.119
+itn_rnw_gamb_ss	.314
+itn_dnw_gamb_ss	.513
+itn_dnf_gamb_ss	.0
+
+

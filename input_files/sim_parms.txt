@@ -1,0 +1,51 @@
+output_binary 0
+save_state 0
+year0 2014
+stochastic_mosq	1
+mosq_update	5
+seed	21
+num_runs	3
+num_people	10000
+final_run	20
+runin	50
+init_output	5
+init_indiv	20
+output_per_yr	52
+overwrite	1
+rel_mv	1
+parallel	1
+preint_prev_age0	2
+preint_prev_age1	10
+recalculate	0
+num_age	44
+num_het	5
+det_baseline	0
+baseline_int	1
+continue_itn	0
+continue_irs	0
+itn_usage	0
+import_eir	0
+continue_eir	0
+prev_tol	0.0005
+det_step	1
+growing_pop 0
+output_year0	-5
+output_year1	-4
+output_year2	-3
+output_year3	-2
+output_year4	-1
+output_year5	0
+output_year6	1
+output_year7	2
+output_year8	3
+output_year9	4
+output_year10	5
+output_year11	6
+output_year12	7
+output_type	1
+output_header	0
+step_type 1
+
+
+
+

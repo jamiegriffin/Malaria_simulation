@@ -1,0 +1,13 @@
+interventions_file	interventions.txt
+sim_file	sim_parms.txt
+mosq_file	mosq_species_parms.txt
+corr_file	corr_file.txt
+itn_file	itn_parms.txt
+irs_file	irs_parms.txt
+mda_file	mda_parms.txt
+vacc_file	vacc_parms.txt
+model_file	model_parms.txt
+output_file	output_vars.txt
+saved_file saved.bin
+
+	

@@ -1,0 +1,51 @@
+mass_pev_start	0
+mass_pev_coverage	.9
+mass_pev_frequency	3
+mass_pev_max_rounds	10000
+mass_pev_target 0
+mass_pev_age0	0
+mass_pev_age1	200
+mass_pev_boost_coverage 0.0
+
+mass_pev_dose_interval 1
+mass_pev_boost1 0
+mass_pev_boost1_interval 12
+mass_pev_boost2 0
+mass_pev_boost2_interval 24
+
+pev_epi_start	0		
+pev_epi_coverage	.9
+pev_epi_scale_up	0
+pev_epi_boost_coverage 0.0
+
+
+tbv_coverage	.9
+tbv_frequency	3
+tbv_max_rounds	10000
+tbv_target	0
+tbv_efficacy	.5
+tbv_half_life	3
+tbv_start	0
+epi_age_1	1.5
+epi_age_2	2.5
+epi_age_3	3.5
+epi_age_4	18
+
+ab_model	0
+pev_efficacy	.5
+pev_half_life	1
+pev_decay_shape 1
+pev_leakiness 10000
+pev_boost_efficacy 0.5
+pev_alpha 0.56
+pev_beta 32
+pev_Vmax 0.88
+pev_ab_mu 5.3423343
+pev_ab_boost_mu 6.4313311
+pev_ab_sigma 1.2526063
+pev_d1_mu 3.33355
+pev_d1_sigma 0.9248248
+pev_d2_mu 6.202944
+pev_d2_sigma	0.5718858
+pev_rho_mu 1.847
+pev_rho_sigma 0.789

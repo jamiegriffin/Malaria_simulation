@@ -1,0 +1,30 @@
+fun_mu0	0.112
+fun_Q0	0.94
+fun_Q_in	0.98
+fun_Q_bed	0.90
+fun_biting_rate	0.33333
+arab_mu0	0.132
+arab_Q0	0.71
+arab_Q_in	0.96
+arab_Q_bed	0.90
+arab_biting_rate	0.33333
+gamb_ss_mu0	0.132
+gamb_ss_Q0	0.92
+gamb_ss_Q_in	0.97
+gamb_ss_Q_bed	0.89
+gamb_ss_biting_rate	0.33333
+larval_feedback 1
+larval_beta	21.2 
+larval_mue	0.0338 
+larval_mul	0.0348  
+larval_mup	0.249   
+larval_de	6.64    
+larval_dl	3.72    
+larval_dp	0.643   
+larval_gamma	13.25
+
+
+
+
+
+           

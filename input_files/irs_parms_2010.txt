@@ -1,0 +1,21 @@
+irs_coverage	.8
+irs_frequency	1
+irs_max_rounds	10000
+irs_target	0
+irs_offset	-.25
+irs_offset_absolute	0
+irs_start	0
+irs_half_life	.5
+irs_kill_fun	1
+irs_repel_fun	.63
+irs_kill_arab	1
+irs_repel_arab	.6
+irs_kill_gamb_ss	1
+irs_repel_gamb_ss	.6
+fun_endophily 0.86
+arab_endophily 0.16
+gamb_ss_endophily 0.86
+
+
+
+

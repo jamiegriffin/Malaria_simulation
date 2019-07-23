@@ -1,0 +1,7 @@
+itn_corr	0.99999999
+irs_corr	0.99999999
+mda_corr	0.99999999
+vacc_corr	0.99999999
+itn_irs_corr	0
+mda_vacc_corr	0
+vector_human_corr	0

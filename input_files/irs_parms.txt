@@ -1,0 +1,22 @@
+irs_coverage	.8
+irs_frequency	1
+irs_max_rounds	10000
+irs_target	0
+irs_offset	-.25
+irs_offset_absolute	0
+irs_start	0
+irs_half_life .5
+irs_ri_fun 0.687
+irs_diw_fun 0.0
+irs_dif_fun 0.888
+irs_ri_arab .687
+irs_diw_arab .0
+irs_dif_arab .503
+irs_ri_gamb_ss .687
+irs_diw_gamb_ss .0
+irs_dif_gamb_ss .888
+
+
+
+
+
