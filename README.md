@@ -17,4 +17,8 @@ Code written by [Jamie Griffin](http://www.maths.qmul.ac.uk/people/jgriffin), ma
  
 ## __Compiling the code__
 
-To compile the code, just include the file main.cpp in the project or command line - all the other code files are included via #include statements.
+To compile the code, just include the file main.cpp in the project (or compilation command) - all the other code files are included via #include statements. 
+
+## __Running the program__
+
+Put the executable in the folder input_files. There is a batch file in that folder with some examples.
