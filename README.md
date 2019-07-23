@@ -21,4 +21,4 @@ To compile the code, just include the file main.cpp in the project (or compilati
 
 ## __Running the program__
 
-Put the executable in the folder input_files. There is a batch file in that folder with some examples.
+Put the executable in the folder input_files. There is a batch file examples.bat in that folder with some examples.
