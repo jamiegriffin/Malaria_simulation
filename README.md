@@ -15,3 +15,6 @@ Code written by [Jamie Griffin](http://www.maths.qmul.ac.uk/people/jgriffin), ma
   
  Global Technical Strategy modelling: [Griffin *et al*, 2016](http://www.thelancet.com/journals/laninf/article/PIIS1473-3099(15)00423-5/abstract)
  
+## __Compiling the code__
+
+To compile the code, just include the file main.cpp in the project or command line - all the other code files are included via #include statements.
