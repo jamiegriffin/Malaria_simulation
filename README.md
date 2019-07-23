@@ -1,7 +1,7 @@
 
 # Individual-based malaria model C++ code
 
-Code written by [Jamie Griffin](http://www.maths.qmul.ac.uk/people/jgriffin), mainly while at Imperial College, London.
+Code written by [Jamie Griffin](https://www.qmul.ac.uk/maths/profiles/griffinj.html), mainly while at Imperial College, London.
 
 ## __References__
   
