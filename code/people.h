@@ -20,7 +20,8 @@ struct Human{
 	Death_event death;
 	Leave_itn_event leave_itn_event;
 	Epi_event epi_event;
-	
+	Pev_dose_event pev_dose_event;
+
 	enum Infection_state {S, T, D, A1, U, P};
 	
 	double date_of_birth;
@@ -53,18 +54,15 @@ struct Human{
 
 	//***********************************************************************
 	
-	bool pev1;
-	bool pev2;
-
+	int pevi;
+	
 	double pev_ab0;
 	double pev_d1;
 	double pev_d2;
 	double pev_rho;
-
-	double pev_time;
 	double pev_efficacy;
-	
 	int num_vacc_doses;
+	vector<double> pev_dose_times;
 	
 	//***********************************************************************
 	double tbv_time;
@@ -118,7 +116,8 @@ struct Human{
 	void leave_itn();
 
 	void give_epi(const int num_epi);
-	void give_pev(const int vaccine, const bool boost);
+	void give_pev(const int vaccine, const double boost_cov, const vector<double> &dose_intervals);
+	void pev_dose();
 	void give_tbv();
 
 	void treat(const int new_trt);
@@ -133,7 +132,7 @@ struct Pev{
 	void setup(const int v0);
 	double find_parameter(const string &p, const double low=0, const double high=1E20, const double x=-99999);
 
-	double find_efficacy(Human& h, const double t);
+	double find_efficacy(Human& h, const double t_ago);
 
 	bool ab_model;
 
@@ -324,9 +323,7 @@ struct Village{
 	double num_smc;
 	double num_mda_trt;
 	double num_mda_screen;
-	double num_vaccinees;
 	double num_vacc_doses;
-	double num_vaccinees_boost;
 
 	bool demog;
 	double num_births;

@@ -144,12 +144,11 @@ struct Smc_pulse_func{
 };
 struct Pev_pulse_func{
 	int vaccine;
-	bool boost;
 	double boost_cov;
-	Pev_pulse_func(const int vacc=2, const bool b=false, const double bc=1.0) : vaccine(vacc), boost(b), boost_cov(bc) {} 
+	vector<double> dose_intervals;
+	Pev_pulse_func(const int vacc, const double bc, const vector<double> &di) : vaccine(vacc), boost_cov(bc), dose_intervals(di) {} 
 	void operator()(Human* h){
-		if(!boost || h->uniform()<boost_cov)
-			h->give_pev(vaccine, boost);
+		h->give_pev(vaccine, boost_cov, dose_intervals);
 	}
 };
 struct Tbv_pulse_func{

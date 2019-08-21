@@ -265,7 +265,7 @@ void Human_parms::setup(Parms& parms){
 Village::Village() : EIR_count(0), num_updates(0), any_itn_irs(false), any_tbv(false), prob_pev_epi(0), prob_ipt_epi(0),
 		prob_itn_birth(0), prob_itn_birth_adult(0), ipt_drug(-1), det(true), peak_time(0),
 		num_itn(0), num_irs(0), num_trt(0), num_smc(0), num_mda_trt(0), num_mda_screen(0), 
-	num_vaccinees(0), num_vaccinees_boost(0), num_vacc_doses(0), num_births(0)  { }
+		num_vacc_doses(0), num_births(0)  { }
 
 Village::~Village(){
 	for(int j=0; j<village_het.size(); j++)
@@ -437,7 +437,6 @@ void Village::setup(Simulation* sim, const unsigned int N0, const string &demog_
 
 	simulation->village_parms.setup(parms);
 	simulation->human_parms.setup(parms);
-
 
 	const string mosq[num_mosq]={"fun","arab","gamb_ss"};
 	for(int m=0; m<mosq_pop.size(); m++)
@@ -734,9 +733,7 @@ void Village::output(const int index, const double time, const double output_int
 				v[k++][index]=num_smc;
 				v[k++][index]=num_mda_trt;
 				v[k++][index]=num_mda_screen;
-				v[k++][index]=num_vaccinees;
 				v[k++][index]=num_vacc_doses;
-				v[k++][index]=num_vaccinees_boost;
 			}
 		}
 	}
@@ -833,7 +830,7 @@ double calc_immunity(double &I, double &I_time, double &I_boost_time, const doub
 
 Human::Human(Village_het* vh) : village_het(vh), infection_state(S), 
 		IC_time(-1), IB_time(-1), IV_time(-1), ID_time(-1),
-		num_vacc_doses(0), pev1(false), pev2(false), pev_efficacy(0.0), pev_ab0(0.0),
+		pevi(0), pev_efficacy(0.0), pev_ab0(0.0), pev_dose_times(0), num_vacc_doses(0),
 		tbv(false), ipt(false), trt(-1), rel_c(0), trt_time(-1E20) {
 	Village* village=village_het->village;
 	hp = &village_het->village->simulation->human_parms;
@@ -846,6 +843,7 @@ Human::Human(Village_het* vh) : village_het(vh), infection_state(S),
 	}
 	leave_itn_event=Leave_itn_event(this);
 	epi_event=Epi_event(this);
+	pev_dose_event=Pev_dose_event(this);
 
 	FOIM_contribution.assign(village->mosq_pop.size(), 0);
 	muj_repeated.resize(hp->sigma_repeated.size());
@@ -1175,14 +1173,17 @@ void Human::die(){
 		}
 	}
 
-	pev1=false;
-	pev2=false;
+	pevi=0;
+	pev_dose_times.clear();
 	pev_efficacy=0;
 	pev_ab0=0;
+
+	pev_dose_event.cancel(&v.simulation->event_manager);
+
 	tbv=false;
 	ipt=false;
 	num_vacc_doses=0;
-
+	
 	epi_event.cancel(&v.simulation->event_manager);
 	epi_event.num_epi=0;
 	epi_event.schedule(&v.simulation->event_manager, v.simulation->epi_ages[0] + 10E-6*uniform());
@@ -1234,48 +1235,51 @@ void Human::give_irs(){
 	itn_irs.irs_time=time_now();
 }
 
-void Human::give_pev(const int vaccine, const bool boost){
-
-	Village& v=*village_het->village;
+void Human::pev_dose() {
+	Village& v = *village_het->village;
 	num_vacc_doses++;
 	v.num_vacc_doses++;
-	if(num_vacc_doses==3)
-		v.num_vaccinees++;
-	if(num_vacc_doses==4)
-		v.num_vaccinees_boost++;
-	
-	Pev& pev= (hp->pevs[vaccine-1]);
-	Ran& ran=v.simulation->sim_ran;
+	if (num_vacc_doses<pev_dose_times.size())
+		pev_dose_event.schedule(&v.simulation->event_manager,
+			pev_dose_times[num_vacc_doses]-pev_dose_times[num_vacc_doses-1]);
 
-	if(pev.ab_model){
-		const double mu=boost ? pev.ab0_boost_mu : pev.ab0_mu;
-		const double sigma=boost ? pev.ab0_boost_sigma : pev.ab0_sigma;
-		const double rho_mu=boost ? pev.rho_boost_mu : pev.rho_mu;
-		const double rho_sigma=boost ? pev.rho_boost_sigma : pev.rho_sigma;
-		pev_ab0=exp(mu + sigma*rnorm(ran));
-		pev_d1=exp(pev.d1_mu + pev.d1_sigma*rnorm(ran));
-		pev_d2=exp(pev.d2_mu + pev.d2_sigma*rnorm(ran));
-		pev_rho=invlogit(rho_mu + rho_sigma*rnorm(ran));
+	if (num_vacc_doses==1 || num_vacc_doses==4) {
+		Ran& ran = v.simulation->sim_ran;
+		Pev& pev = hp->pevs[pevi-1];
+		const bool boost = num_vacc_doses==4;
+		if (pev.ab_model) {
+			const double mu = boost ? pev.ab0_boost_mu : pev.ab0_mu;
+			const double sigma = boost ? pev.ab0_boost_sigma : pev.ab0_sigma;
+			const double rho_mu = boost ? pev.rho_boost_mu : pev.rho_mu;
+			const double rho_sigma = boost ? pev.rho_boost_sigma : pev.rho_sigma;
+			pev_ab0 = exp(mu + sigma*rnorm(ran));
+			pev_d1 = exp(pev.d1_mu + pev.d1_sigma*rnorm(ran));
+			pev_d2 = exp(pev.d2_mu + pev.d2_sigma*rnorm(ran));
+			pev_rho = invlogit(rho_mu + rho_sigma*rnorm(ran));
+		}
+		else {
+			const double e = boost ? pev.boost_efficacy : pev.efficacy;
+			const double pev_c = pev.leakiness;
+			if (pev_c<=0.1) // all or nothing
+				pev_efficacy = uniform()<e ? 1 : 0;
+			else if (pev_c>0.1 && pev_c<10000)
+				pev_efficacy = rbeta(pev_c*e, pev_c*(1-e), ran);
+			else if (pev_c>=10000)	 // wholly leaky
+				pev_efficacy = e;
+		}
 	}
-	else{
-		const double e = boost ? pev.boost_efficacy : pev.efficacy;
-		const double pev_c=pev.leakiness;
-		if(pev_c<=0.1) // all or nothing
-			pev_efficacy=uniform()<e ? 1 : 0;
-		else if(pev_c>0.1 && pev_c<10000)
-			pev_efficacy=rbeta(pev_c*e, pev_c*(1-e), ran);
-		else if(pev_c>=10000)	 // wholly leaky
-			pev_efficacy=e;
-	}
-	if(vaccine==1){
-		pev1=true;
-		pev2=false;
-	}
-	else if(vaccine==2){
-		pev2=true;
-		pev1=false;
-	}
-	pev_time=time_now();
+}
+
+void Human::give_pev(const int vaccine, const double boost_cov, const vector<double> &dose_intervals){
+	pevi = vaccine;
+	num_vacc_doses = 0;
+	const double t = time_now();
+	pev_dose_times.resize(dose_intervals.size()>3 && uniform()<boost_cov ? dose_intervals.size() : 3);
+	for (int i = 0; i<pev_dose_times.size(); i++)
+		pev_dose_times[i] = t + dose_intervals[i]-dose_intervals[0];
+	
+	pev_dose_event.cancel(&village_het->village->simulation->event_manager);
+	pev_dose();
 }
 void Human::give_tbv(){
 	tbv=true;
@@ -1302,17 +1306,12 @@ void Human::give_epi(const int num_epi){
 				go[k] = mu0 + muj_repeated[j_repeated] + z < 0;
 			}
 		}
-		pev1=go[0];
+		if (go[0])
+			give_pev(1, hp->pev_epi_boost_coverage, v.simulation->epi_ages);
 		ipt=go[1];
-		
 	}
 	
-	if(pev1){
-		if(num_epi<3)
-			give_pev(1, false);
-		else if(num_epi==3 && uniform()<hp->pev_epi_boost_coverage)
-			give_pev(1, true);
-	}
+
 	if(ipt)
 		treat(v.ipt_drug);
 }
@@ -1361,10 +1360,8 @@ double Human::prob_infection(const double age){
 		return 0.0;
 
 	double p=pp*hp->prob_infection(IB1);
-	if(pev1)
-		p *= 1.0 - hp->pevs[0].find_efficacy(*this, t-pev_time);
-	else if(pev2)
-		p *= 1.0 - hp->pevs[1].find_efficacy(*this, t-pev_time);
+	if(pevi>0)
+		p *= 1.0 - hp->pevs[pevi-1].find_efficacy(*this, t-pev_dose_times[num_vacc_doses-1]);
 	return p;
 }
 

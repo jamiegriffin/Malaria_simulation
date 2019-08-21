@@ -197,7 +197,7 @@ int main(int argc, char *argv[]){
 			output_vars.push_back(Output_var(quantity[i], age0[i], age1[i]));
 
 		const int num_vars=quantity.size();
-		const int num_num=9;
+		const int num_num=7;
 		vector<vector<vector<double> > > to_output(num_runs, vector<vector<double> >(num_vars + num_num + 1, 
 											vector<double>((final_run - first_output + 1)*num_per_yr + 1)));
 

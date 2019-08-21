@@ -235,9 +235,7 @@ void Simulation::add_main_interventions(){
 	village.num_smc=0;
 	village.num_mda_trt=0;
 	village.num_mda_screen=0;
-	village.num_vaccinees=0;
 	village.num_vacc_doses=0;
-	village.num_vaccinees_boost=0;
 					 
 	const bool itn=from_map_bool("itn", false);
 	const bool irs=from_map_bool("irs", false);
@@ -355,19 +353,16 @@ void Simulation::add_main_interventions(){
 		string suffix="";
 		int num=1;
 		
-		const double dose_interval=from_map("mass_pev_dose_interval", 0, 1E20, 1)/12.0;
-		const bool boost1=from_map_bool("mass_pev_boost1", false);
-		const double boost1_interval=from_map("mass_pev_boost1_interval", 0, 1E20, 12)/12.0;
-		const bool boost2=from_map_bool("mass_pev_boost2", false);
-		const double boost2_interval=from_map("mass_pev_boost2_interval", 0, 1E20, 24)/12.0;
-		const double boost_coverage= from_map("mass_pev_boost_coverage", 0, 1, 0.0);
+		const double dose_interval=from_map("mass_pev_dose_interval", 0, 1E20, 1)*dy/12.0;
+		vector<double> dose_intervals = { 0.0, dose_interval, 2.0*dose_interval };
+		if (from_map_bool("mass_pev_boost1", false))
+			dose_intervals.push_back(2.0*dose_interval + from_map("mass_pev_boost1_interval", 0, 1E20, 12)*dy/12.0);
+		if (from_map_bool("mass_pev_boost2", false))
+			dose_intervals.push_back(2.0*dose_interval + from_map("mass_pev_boost2_interval", 0, 1E20, 24)*dy/12.0);
+		sort(dose_intervals.begin(), dose_intervals.end());
+		const double boost_coverage = from_map("mass_pev_boost_coverage", 0, 1, 0.0);
 		do{
-			for(int i=0; i<3; i++)
-				repeated_intervention_event(&village, Pev_pulse_func(2, false), prefix, 3, i*dose_interval*dy, false, suffix); 
-			if(boost1)
-				repeated_intervention_event(&village, Pev_pulse_func(2, true, boost_coverage), prefix, 3, (2*dose_interval+boost1_interval)*dy , false, suffix); 
-			if(boost2)
-				repeated_intervention_event(&village, Pev_pulse_func(2, true, boost_coverage), prefix, 3, (2*dose_interval+boost2_interval)*dy , false, suffix); 
+			repeated_intervention_event(&village, Pev_pulse_func(2, boost_coverage, dose_intervals), prefix, 3, 0.0, false, suffix);
 			suffix="_" + to_string(++num);
 		}while(in_map(prefix + suffix) && from_map_bool(prefix + suffix));
 	}
@@ -549,7 +544,7 @@ void output_sim(const vector<vector<vector<double> > > &to_output, const string 
 			if(output_type==0)
 				out << '\t' << var_names[i] + "_smooth";
 		}
-		out << "\tnum_itn\tnum_irs\tnum_trt\tnum_smc\tnum_mda_trt\tnum_mda_screen\tnum_vaccinees\tnum_vacc_doses\tnum_vaccinees_boost\n";
+		out << "\tnum_itn\tnum_irs\tnum_trt\tnum_smc\tnum_mda_trt\tnum_mda_screen\tnum_vacc_doses\n";
 	}
 
 	if(output_header<2){
