@@ -56,6 +56,15 @@ public:
 	void execute();
 };
 
+class Pev_dose_event : public Event{
+protected:
+	Human* human;
+public:
+	Pev_dose_event(){}
+	Pev_dose_event(Human* h) : human(h) {}
+	void execute();
+};
+
 //***************************************************************************
 //***************************************************************************
 

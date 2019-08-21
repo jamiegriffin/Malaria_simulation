@@ -25,6 +25,9 @@ void Death_event::execute(){
 void Leave_itn_event::execute(){
 	human->leave_itn();
 }
+void Pev_dose_event::execute(){
+	human->pev_dose();
+}
 
 //***************************************************************************
 //***************************************************************************
